@@ -1,0 +1,1289 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>reveal.js</title>
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/gr.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai-sublime.css">
+  <!-- <link rel="stylesheet" href="lib/css/zenburn.css"> -->
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+</head>
+<body><div class="reveal"><div class="slides">
+
+  <!-- data-background="linear-gradient(45deg, #15C39A, #14DBB6)" -->
+  <section>
+    <h1>Focal</h1>
+    <h2>Functional reactive React</h2>
+    <h5>(with observables and lenses)</h5>
+    <!-- <br /> -->
+    <!-- <p><a style="background-image: linear-gradient(45deg, #f2a, #2af); color: transparent; -webkit-background-clip: text; text-decoration: underline" href="https://github.com/grammarly/focal" target="_blank">https://github.com/grammarly/focal</a></p> -->
+    <p><a href="https://github.com/grammarly/focal" target="_blank" class="roll">https://github.com/grammarly/focal</a></p>
+    <!-- <p>
+      <img
+        src="lib/img/grammarly_logo.svg"
+        style="box-shadow: none; border: 0px; height: 40px; background: transparent; filter: drop-shadow(0px 0px 2px rgba(255,255,255,.9))"
+      />
+    </p> -->
+    <br />
+
+    <p>
+      <a style="font-size: 0.7em; vertical-align: middle" href="https://twitter.com/glatteis" target="_blank" class="roll">@glatteis / Sergey Yavnyi</a>
+      ◆
+      <img
+        src="lib/img/grammarly_logo.svg"
+        style="box-shadow: none; border: 0px; height: 40px; background: transparent; filter: drop-shadow(0px 0px 2px rgba(255,255,255,.9)); vertical-align: middle"
+      />
+    </p>
+
+    <!-- <p>
+      <img
+        src="https://dy6j70a9vs3v1.cloudfront.net/funnel_wap/static/files/b3597597e360d717d72bda958ac8eabd/grammarly_logo.svg"
+        style="filter: drop-shadow(3px 3px 2px rgba(0,0,0,.3)); height: 100px; border: 0px; background: transparent; box-shadow: none"
+      />
+    </p> -->
+
+    <aside class="notes" data-markdown>
+    </aside>
+  </section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ### About me
+
+    - User-facing products @ Grammarly
+    - Programming languages _(C#, F#, TypeScript, Elm, Python, Haskell, Lua, Clojure, ...)_
+    - Functional programming _(statically typed)_
+
+    <br />
+    <a style="font-size: 0.7em" href="https://github.com/blacktaxi" style="text-align: center">
+      github.com/blacktaxi
+    </a>
+    ◆
+    <a style="font-size: 0.7em" href="http://reversemicrowave.me/">reversemicrowave.me</a>
+
+    ///
+  </script></section>
+
+  <section data-background="#fff">
+    <p style="margin: 0px">
+      <img
+        src="lib/img/grammarly_logo.svg"
+        style="box-shadow: none; border: 0px; height: 75px"
+      />
+    </p>
+
+    <p style="margin: 0px">
+      <video
+        src="lib/img/product_demo.ogg"
+        style="height: 200px"
+        preload="auto" poster="lib/img/poster.png" autoplay="" loop=""
+      />
+    </p>
+
+    <ul>
+      <li>A writing app <em>(grammar, spelling and more!)</em></li>
+      <li>Web, desktop, mobile (<em>soon!</em>)</li>
+      <li>10M+ users (<em>Chrome extension only!</em>)</li>
+      <!-- <li>Web <em>(<a href="https://app.grammarly.com">app</a> and <a href="https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen">browser extensions</a>)</em></li>
+      <li>Desktop <em>(<a href="https://www.grammarly.com/native">apps</a> and <a href="https://www.grammarly.com/office-addin">MS Office add-in</a>)</em></li>
+      <li>Mobile <em>soon!</em></li> -->
+    </ul>
+
+    <aside class="notes" data-markdown>
+    </aside>
+  </section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## This talk: Focal
+
+    - State management for React
+    - FRP
+    - TypeScript
+    - Production-grade™
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ✨
+
+    [https://app.grammarly.com](https://app.grammarly.com/)
+
+    built with Focal
+
+    ✨
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///' data-background-video="lib/img/appdemo.mp4" data-background-video-loop="true" data-background-size="contain"><script type="text/template">
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    _(spring 2016)_
+
+    ## Front-end stack upgrade
+
+    Wants:
+
+    - Product quality
+    - Developer productivity
+    - Team scalability
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## New stack: language
+
+    <img src="lib/img/flow.png" style="height: 100px; background: transparent; margin: 20px"/>
+    <img src="lib/img/elm.png" style="height: 100px; background: transparent; margin: 20px"/>
+    <img src="lib/img/purescript.png" style="height: 100px; background: transparent; margin: 20px"/>
+
+    <img src="lib/img/scalajs.svg" style="height: 100px; background: transparent; margin: 20px"/>
+    <img src="lib/img/haskell.png" style="height: 100px; background: transparent; margin: 20px"/>
+    <img src="lib/img/ocaml.svg" style="height: 100px; background: transparent; margin: 20px"/>
+
+    <img src="lib/img/typescript.png" style="height: 100px; background: transparent; margin: 20px"/>
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## New stack: language
+
+    <table style="font-size: 0.8em">
+      <thead style="font-size: 0.6em">
+        <tr>
+        <td/>
+        <th><img src="lib/img/flow.png" style="height: 30px; background: transparent; margin: 0px"/> Flow</th>
+        <th><img src="lib/img/typescript.png" style="height: 30px; background: transparent; margin: 0px"/> TypeScript</th>
+        <th><img src="lib/img/scalajs.svg" style="height: 30px; background: transparent; margin: 0px"/> Scala.js</th>
+        <th><img src="lib/img/elm.png" style="height: 30px; background: transparent; margin: 0px"/> Elm</th>
+        <th><img src="lib/img/purescript.png" style="height: 30px; background: transparent; margin: 0px"/> PureScript</th>
+        <th><img src="lib/img/haskell.png" style="height: 30px; background: transparent; margin: 0px"/> GHCjs</th>
+        <th><img src="lib/img/ocaml.svg" style="height: 30px; background: transparent; margin: 0px"/> js_of_ocaml</th>
+        </tr>
+      </thead>
+      <tr>
+        <th>Features</th>
+        <td>🙂</td>
+        <td>🙂</td>
+        <td>👍</td>
+        <td>⭐️</td>
+        <td>⭐️</td>
+        <td>⭐️</td>
+        <td>👍</td>
+      </tr>
+      <tr>
+        <th>Tooling</th>
+        <td>👍</td>
+        <td>⭐️</td>
+        <td>👌</td>
+        <td>👌</td>
+        <td>👌</td>
+        <td>😐</td>
+        <td>❌</td>
+      </tr>
+      <tr>
+        <th>Community</th>
+        <td>⭐️</td>
+        <td>⭐️</td>
+        <td>🙂</td>
+        <td>😐</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>❌</td>
+      </tr>
+      <tr>
+        <th>Learning curve</th>
+        <td>⭐️</td>
+        <td>⭐️</td>
+        <td>👍</td>
+        <td>🙂</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>👌</td>
+      </tr>
+    </table>
+
+    _(spring 2016)_
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    <img src="lib/img/gr.svg" style="height: 100px; border: none; box-shadow: none; background: transparent" /><img src="lib/img/heart.png" style="height: 100px; border: none; box-shadow: none; background: transparent" /><img src="lib/img/typescript.png" style="height: 100px; border: none; box-shadow: none" />
+
+    <table style="font-size: 0.8em">
+    <thead style="font-size: 0.6em">
+      <tr>
+      <td/>
+      <th>TypeScript</th>
+      </tr>
+    </thead>
+    <tr>
+      <th>Features</th>
+      <td>🙂</td>
+    </tr>
+    <tr>
+      <th>Tooling</th>
+      <td>⭐️</td>
+    </tr>
+    <tr>
+      <th>Community</th>
+      <td>⭐️</td>
+    </tr>
+    <tr>
+      <th>Learning curve</th>
+      <td>⭐️</td>
+    </tr>
+    </table>
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ### Static typing is cool
+
+    - Tests that you don't have to write
+    - Documentation that stays up to date
+    - Code intent expressed more clearly
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    - [https://jaredforsyth.com/type-systems-js-dev/](https://jaredforsyth.com/type-systems-js-dev/)
+
+      Type systems will make you a better JavaScript programmer
+    - [https://goo.gl/jkHcSQ](https://goo.gl/jkHcSQ)
+
+      Designing with types: Making illegal states unrepresentable (F#)
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## New stack: framework
+
+    - UI library: React
+    - State management: ?
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Why Redux?
+
+    Like Elm!
+
+    - Predictability: _state is consistent_
+    - Testability: _explicit state transitions_
+    - Ease of debugging: _dev tools_
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Why _not_ Redux?
+
+    - Not completely type safe
+    - Code verbosity: actions, composition, async
+    - No flexibility wr/t state
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Why _not_ Redux?
+
+    - Significant change in coding style
+
+    <blockquote style="font-size: 0.7em">
+      The thing I've struggled with, as a new user the most is trying to overcome both the extreme (imho) coding style change in Redux, and the conceptual changes at the same time;
+
+      <footer>
+        – <cite>[https://github.com/reactjs/redux/issues/1385](https://github.com/reactjs/redux/issues/1385#issuecomment-182601217)</cite>
+      </footer>
+    </blockquote>
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Calmm
+
+    - It's really good!
+
+    <span>also...</span>
+
+    - Not typed, hard/impossible to write good typings
+    - Very _**fun**ctional_ ([Ramda](http://ramdajs.com/)-heavy)
+
+    <a href="https://github.com/calmm-js">https://github.com/calmm-js</a>
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - Heavily inspired by Calmm
+
+    <span>but also...</span>
+
+    - Typed: _use every possibility for type safety_
+    - Immediate productivity: _simpler and more familiar_
+    - Powered by RxJS: _more features out of the box_
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ### Focal ≅ Calmm
+
+    - Same idea
+    - Different implementation
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+### Focal: code sample
+
+```js
+const Counter = ({ count }: { count: Atom<number> }) =>
+  <F.div>
+    You have clicked this button {count} time(s).
+    <button onClick={() => count.modify(x => x + 1)}>
+      Click again?
+    </button>
+  </F.div>;
+
+const App = (props: { state: Atom<{ count: number }> }) =>
+  <div>
+    Hello, world!
+    <Counter count={props.state.lens(x => x.count)} />
+  </div>;
+
+const state = Atom.create({ count: 0 })
+
+ReactDOM.render(<App state={state} />, el)
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - <span class="fragment">📍 **Observables + React**</span>
+    - &nbsp;
+    - &nbsp;
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## What is an `Observable`?
+
+```typescript
+interface Observable<T> {
+  // simplified
+  subscribe(onNext: (value: T) => void): Subscription
+}
+
+interface Subscription {
+  unsubscribe(): void
+}
+```
+
+- First class event_: event as value_
+- A stream of data_: collection of values over time_
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+Event:
+
+```js
+document.addEventListener('keypress', e => {
+  if (e.key.toLowerCase() === 'a') {
+    console.log('A was pressed!')
+  }
+})
+```
+
+Observable:
+
+```typescript
+Observable.fromEvent(document, 'keypress')
+  .filter(e => e.key.toLowerCase() === 'a')
+  .subscribe(() => console.log('A was pressed!'))
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ### Observable operators
+
+    <img src="lib/img/marbles.png" style="height: 150px"/>
+    <img src="lib/img/filter.png" style="height: 150px"/>
+    <img src="lib/img/merge.png" style="height: 175px"/>
+    <img src="lib/img/debounceTime.png" style="height: 175px"/>
+
+    ...
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///' style="font-size: 0.8em"><script type="text/template">
+    ## Learning more
+
+    - [http://queue.acm.org/detail.cfm?id=2169076](http://queue.acm.org/detail.cfm?id=2169076)
+      - Your Mouse is a Database
+    - [http://reactivex.io/intro.html](http://reactivex.io/intro.html)
+      - Introduction to observables (with RxJS)
+    - [https://goo.gl/fQvnzc](https://goo.gl/fQvnzc)
+      - Learning Observable By Building Observable
+    - [http://rxmarbles.com](http://rxmarbles.com) – RxJS Marbles
+
+    And more:
+    - [https://blog.janestreet.com/breaking-down-frp/](https://blog.janestreet.com/breaking-down-frp/)
+      - Breaking down FRP
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Observables in React
+
+    - Declarative style of programming
+    - Explicit data flow
+
+    <img src="lib/img/rxjs.png" style="background: transparent; height: 200px; box-shadow: none" />
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Observables in React
+
+    - Embed observables into React components
+      - Props, `children`
+    - Make the view ← data dependency explicit
+      - Component is updated on next observable value
+      - VDOM re-computed (`render` method called)
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Observables in React
+
+<pre><code style="font-size: 0.95em" data-trim data-noescape class="js">
+import { Observable } from 'rxjs'
+import { F } from '@grammarly/focal'
+
+const Clock = () =>
+  &lt;F.div&gt;
+    The time is {
+      Observable.interval(1000).startWith(0)
+        .map(_ => new Date().toLocaleTimeString())
+    }.
+  &lt;/F.div&gt;<span style="color: transparent">;</span>
+
+const MousePosition = () =>
+  &lt;F.div&gt;
+    Mouse cursor is at {
+      Observable.fromEvent(document, 'mousemove')
+        .map(e => `(${e.clientX}, ${e.clientY})`)
+    }.
+  &lt;/F.div&gt;<span style="color: transparent">;</span>
+</code></pre>
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Observables in React
+
+<pre><code style="font-size: 0.95em" data-trim data-noescape class="js">
+import { Observable } from 'rxjs'
+import { <mark>F</mark> } from '@grammarly/focal'
+
+const Clock = () =>
+  &lt;<mark>F</mark>.div&gt;
+    The time is {
+      Observable.interval(1000).startWith(0)
+        .map(_ => new Date().toLocaleTimeString())
+    }.
+  &lt;/<mark>F</mark>.div&gt;<span style="color: transparent">;</span>
+
+const MousePosition = () =>
+  &lt;<mark>F</mark>.div&gt;
+    Mouse cursor is at {
+      Observable.fromEvent(document, 'mousemove')
+        .map(e => `(${e.clientX}, ${e.clientY})`)
+    }.
+  &lt;/<mark>F</mark>.div&gt;<span style="color: transparent">;</span>
+</code></pre>
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## `F`-components
+
+<br />
+
+```js
+import { F } from '@grammarly/focal'
+```
+
+- Same as intrinsic React components
+- Allow embedding `Observable`s
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - 📍 Observables + React</span>
+    - &nbsp;
+    - &nbsp;
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - ✅ Observables + React
+    - <span class="fragment">📍 **Atoms**</span>
+    - &nbsp;
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## What is `Atom`?
+
+- Observable state store
+- Reactive variable (also, _like a spreadsheet cell_)
+- `Atom`ic updates
+
+```typescript
+// simplified
+interface Atom<T> extends Observable<T> {
+  // get current value
+  get(): T
+
+  // set new value
+  set(newValue: T): void
+
+  // modify existing value
+  modify(updateFn: (currentValue: T) => T): void
+}
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Atom: immutable data
+
+    - Plain JS object
+    - Persistent/immutable
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+### Atom: `get`, `set`, `modify`
+
+```typescript
+import { Atom } from '@grammarly/focal'
+
+// Create an atom with the initial value of 0.
+const count = Atom.create(0)
+
+// Output the current value.
+console.log(count.get()) // => 0
+
+// Set 5 as the new value.
+count.set(5)
+
+console.log(count.get()) // => 5
+
+// Modify the value through an update function.
+count.modify(x => x + 1)
+
+console.log(count.get()) // => 6
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+### Atom: `modify`
+
+- Functional update: must return a fresh value
+- Don't mutate! _No_ side effects!
+
+```typescript
+const state = Atom.create({ count : 0 })
+
+// Increment count value:
+state.modify(
+  x => ({ ...x, ...{ count: x.count + 1 } })) // ✅ good!
+
+// Don't try this at home:
+state.modify(x => { x.count++ }) // ❌ BAD!
+
+state.get().count++ // ❌ no thank you
+
+state.set({ count: state.get().count + 1 }) // ❌ probably NO
+
+state.modify(x => {
+  state.set({ count: x.count - 1 }) // ❌ you're in trouble
+  return { ...x, ...{ count: x.count + 1 } }
+})
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## `Atom` is `Observable`
+
+- Can `subscribe` to changes
+- Can use `Observable` operators
+- Can embed in React components!
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+### Atom: `subscribe`
+
+```typescript
+import { Atom } from '@grammarly/focal'
+
+const count = Atom.create(0)
+
+// Subscribe to changes of count's value, outputting a
+// new value to the console each time.
+// Note: this will also immediately output the current value.
+count.subscribe(console.log) // => 0
+
+// Set a new value, it will get written to the console output.
+count.set(5) // => 5
+
+// Modify – expect more console output.
+count.modify(x => x + 1) // => 6
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Atom: in React
+
+```js
+const Counter = ({ count }: { count: Atom<number> }) =>
+  <F.div>
+    Count: {count}.
+    Is odd: {count.map(x => x % 2 ? 'yes' : 'no')}.
+
+    <button onClick={() => count.modify(x => x + 1)}>
+      Increment
+    </button>
+  </F.div>
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Special properties
+
+1. Emit new value only when it has changed
+  - Minimize unnecessary `render`s: _free performance_
+1. Emit current value immediately to each subscriber
+  - Like `Rx.BehaviorSubject`
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Atom: `view`
+
+- Like `Observable.map`_: can chain!_
+- Emits only distinct values_: important for performance!_
+
+```typescript
+const state = Atom.create({ count: 5 })
+
+// a view of the count property of the state atom
+const count = state.view(x => x.count)
+
+// a chained view of whether the value is positive
+const countIsPositive = count.view(x => x > 0)
+```
+
+///
+  </script></section>
+
+  <!-- OPTIONAL -->
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+### _// a note on equality_
+
+- Has value changed? _Need equality operator_
+- What _is_ equality? _Depends on the data type_
+- Equality in Focal: **structural**
+  - Universal built-in equality function
+  - Could be parametrized (for now APIs are private)
+  - Only plain JSON data types so far
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Enough?
+
+Can we build a complete app with these tools?
+
+- Observables + React
+- Atoms
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Probably no
+
+<!--.element: class="fragment"--> If the app has > 1 component...
+
+- <!--.element: class="fragment"--> Give up centralized state
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## State not centralized
+
+```js
+const state1 = Atom.create(0)
+const state2 = Atom.create(0)
+
+const App = () =>
+  <div>
+    Counter 1: <Counter state={state1} />
+    Counter 2: <Counter state={state2} />
+  </div>
+```
+
+- Consistency not guaranteed
+- Lost benefits: predictability, ease of reasoning, debugging
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Probably no
+
+If the app has > 1 component...
+
+- Give up centralized state
+- <!--.element: class="fragment"--> _Or_ come up with a way to decompose state
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## State is monolithic
+
+```js
+const state = Atom.create({ count1: 0, count2: 0 })
+
+const App = () =>
+  <div>
+    Counter 1:
+    <Counter state={state.view(x => x.count1)}
+             onIncrement={() => state.modify(x =>
+               ({ ...x, { count1: x.count1 + 1 } }))}
+    />
+
+    Counter 2:
+    <Counter state={state.view(x => x.count2)}
+             onIncrement={() => state.modify(x =>
+               ({ ...x, { count2: x.count2 + 1 } }))}
+    />
+  </div>
+```
+
+- This does not look good
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+#### Loss/loss
+
+# Can we fix it?
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - ✅ Observables + React
+    - 📍 Atoms
+    - &nbsp;
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - ✅ Observables + React
+    - ✅ Atoms
+    - <span class="fragment">📍 **Lenses**</span>
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Lens
+
+    What is the problem?
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Immutable data
+
+    - Functional updates: cumbersome and repetitive
+
+    ```typescript
+    const state = { count: 5 }
+
+    const newState = {
+      ...state,
+      ...{ count: state.count + 1 }
+    }
+    ```
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## Immutable data
+
+    - Nested updates: even worse
+
+    ```typescript
+    const state = { counter: { count: 5 } }
+
+    const newState = {
+      ...state,
+      ...{ counter: { count: state.counter.count + 1 } }
+    }
+    ```
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## What is `Lens`?
+
+    - A "functional reference"
+      - Reference to a part of immutable data
+    - An abstraction for operating on a part of immutable data structure
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## What is `Lens`?
+
+```typescript
+// simplified
+interface Lens<TSource, T> {
+  // a getter
+  get(source: TSource): T
+
+  // a setter
+  set(newValue: T, source: TSource): TSource
+}
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Lens: `create`
+
+<pre><code data-trim data-noescape class="js">
+import { Lens } from '@grammarly/focal'
+
+const state = { count: 5 }
+
+const countLens = Lens.create(
+  // getter: returns the `count` property
+  (obj: typeof state) => obj.count,
+
+  // and the setter: returns a new object with the `count`
+  // property updated
+  (newValue, obj) => ({ ...obj, count: newValue })
+)
+</code></pre>
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Lens: `create`
+
+<pre><code data-trim data-noescape class="js">
+import { Lens } from '@grammarly/focal'
+
+const state = { <mark>count</mark>: 5 }
+
+const countLens = Lens.create(
+  // getter: returns the `count` property
+  (obj: typeof state) => obj.<mark>count</mark>,
+
+  // and the setter: returns a new object with the `count`
+  // property updated
+  (newValue, obj) => ({ ...obj, <mark>count</mark>: newValue })
+)
+</code></pre>
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Lens: `create`
+
+<pre><code data-trim data-noescape class="js">
+import { Lens } from '@grammarly/focal'
+
+const state = { <mark>count</mark>: 5 }
+
+// create the same lens in one line of code!
+const countLens = Lens.prop((x: typeof state) => x.<mark>count</mark>)
+
+</code></pre>
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## `Lens.prop`: _what?_
+
+- Supply a getter function
+- Setter function _magically inferred_
+
+<br />
+
+```typescript
+const countLens = Lens.prop((x: typeof state) => x.count)
+```
+<br />
+
+- Type safety
+- IDE integration (auto-complete, find usage, rename-refactor)
+
+///
+  </script></section>
+
+  <!-- <section data-markdown data-separator-notes='///'><script type="text/template">
+## TS 2.1+: `Lens.key`
+
+- Uses `keyof` and type queries to make it type safe
+
+<br />
+
+```typescript
+// still type safe!
+const countLens = Lens.key<typeof state>()('count')
+```
+
+///
+notes
+  </script></section> -->
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Lens: `get`, `set`, `modify`
+
+<pre><code data-trim data-noescape class="js">
+const state = { count: 5 }
+
+const countLens = Lens.prop((x: typeof state) => x.count)
+
+// read through the lens
+console.log(countLens.<mark>get</mark>(state)) // => 5
+
+// write through the lens
+console.log(countLens.<mark>set</mark>(6, state)) // => { count: 6 }
+
+// perform a functional update (same as atom!)
+countLens.<mark>modify</mark>(x => x + 1, state) // => { count: 6 }
+</code></pre>
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Lens: `compose`!
+
+<pre><code style="font-size: 0.9em" data-trim data-noescape class="js">
+const state = { counter: { count: 5 } }
+
+const counterLens = Lens.prop((x: typeof state) => x.counter)
+
+const countLens = Lens.key((x: typeof state.counter) => x.count)
+
+const valueLens = counterLens.<mark>compose</mark>(countLens)
+
+// read
+valueLens.get(state) // => 5
+
+// write
+valueLens.set(6, state) // => { counter: { count: 6 } }
+
+// increment
+valueLens.modify(x => x + 1, state) // => { counter: { count: 7 } }
+</code></pre>
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## `Lens` + `Atom`
+
+    ```typescript
+    const state = Atom.create({ counter: { count: 5 } })
+
+    // type safe!
+    const value = state.lens(x => x.counter).lens(x => x.count)
+
+    // read the lensed atom
+    value.get() // => 5
+
+    // update the lensed atom
+    value.modify(x => x + 1)
+
+    // original atom is updated too!
+    state.get() // { counter: { count: 6 } }
+
+    ```
+
+    ///
+    notes
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - ✅ Observables + React
+    - ✅ Atoms
+    - 📍 Lenses
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Focal
+
+    - ✅ Observables + React
+    - ✅ Atoms
+    - ✅ Lenses
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///' data-background-image="lib/img/focal-arch.png" data-background-size="contain"><script type="text/template">
+
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+## Finished app
+
+```js
+const Counter = ({ count }: { count: Atom<number> }) =>
+  <F.div>
+    You have clicked this button {count} time(s).
+    <button onClick={() => count.modify(x => x + 1)}>
+      Click again?
+    </button>
+  </F.div>;
+
+const App = (props: { state: Atom<{ count: number }> }) =>
+  <div>
+    Hello, world!
+    <Counter count={props.state.lens(x => x.count)} />
+  </div>;
+
+const state = Atom.create({ count: 0 })
+
+ReactDOM.render(<App state={state} />, el)
+```
+
+///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ## ️️⚔ Demo time! ⚔
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    ### Focal: conclusion
+
+    - ✅ Observables + React<span class="fragment">_: FRP_</span>
+    - ✅ Atoms<span class="fragment">_: centralized state_</span>
+    - ✅ Lenses<span class="fragment">_: modularity_</span>
+
+    <p>
+      <p class="fragment">...included, free of charge:</p>
+
+      <ul class="fragment">
+        <li>Concise and expressive code style</li>
+        <li>Type safety</li>
+        <li>Non-opinionated: plays well with others</li>
+        <li>It's just code – no magic! (almost)</li>
+        <li>Performance (~~`shouldComponentUpdate`~~)</li>
+      </ul>
+    </p>
+
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    Why wait?
+
+    # Install today!
+
+    ⚡️
+
+    `yarn add @grammarly/focal`
+
+    `npm i -S @grammarly/focal`
+
+    [https://github.com/grammarly/focal](https://github.com/grammarly/focal)
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///'><script type="text/template">
+    # Q & A
+
+    ✦
+
+    [https://github.com/grammarly/focal](https://github.com/grammarly/focal)
+
+    <img
+      src="lib/img/grammarly_logo.svg"
+      style="box-shadow: none; border: 0px; height: 40px; background: transparent; filter: drop-shadow(0px 0px 2px rgba(255,255,255,.9)); vertical-align: middle"
+    />
+
+    ///
+  </script></section>
+
+  <section data-markdown data-separator-notes='///' data-background-image="https://dy6j70a9vs3v1.cloudfront.net/funnel_wap/static/files/019bc798a517d34210afabd8e074fbc0/cover-engineering.jpg"><script type="text/template">
+    # We're hiring!
+
+    <br />
+
+    <a href="https://www.grammarly.com/jobs/engineering" style="background: rgba(0,0,0,.7)">
+      https://www.grammarly.com/jobs/engineering
+    </a>
+
+    <br />
+
+    <a href="https://tech.grammarly.com/" style="background: rgba(0,0,0,.7)">
+      https://tech.grammarly.com
+    </a>
+
+    ///
+  </script></section>
+
+</div></div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  // More info about config & dependencies:
+  // - https://github.com/hakimel/reveal.js#configuration
+  // - https://github.com/hakimel/reveal.js#dependencies
+  Reveal.initialize({
+    transition: 'fade',
+    controls: false,
+    history: true,
+    markdown: {
+      smartypants: true
+      // gfm: true,
+    },
+    dependencies: [
+      { src: 'plugin/markdown/marked.js' },
+      { src: 'plugin/markdown/markdown.js' },
+      { src: 'plugin/notes/notes.js', async: true },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+    ]
+  });
+</script>
+
+<div id="hidden" style="display:none;">
+  <div id="header">
+    <div style="position: absolute; bottom: 0%; right: 0%">
+      <!-- <img
+        src="lib/img/grammarly_logo.svg"
+        style="filter: drop-shadow(0px 0px 2px rgba(255,255,255,.9)); height: 30px"
+      /> -->
+    </div>
+    <div style="position: absolute; bottom: 0%; left: 0%">
+      <span style="font-size: 0.6em">
+        <!-- <a href="https://twitter.com/glatteis" target="_blank">@glatteis</a> -->
+        <!-- @glatteis -->
+      </span>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script type="text/javascript">
+  var header = $('#header').html()
+  if (window.location.search.match(/print-pdf/gi)) {
+    Reveal.addEventListener('ready', function(event) {
+      $('.slide-background').append(header)
+    })
+  }	else {
+    $('.slides').append(header)
+  }
+</script>
+
+</body></html>
